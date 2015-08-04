@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 
 /**
  * 自定义拦截器，判断此次请求是否有权限
+ * @see com.scienjus.authorization.annotation.Authorization
  * @author ScienJus
  * @date 2015/7/30.
  */
@@ -32,8 +33,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
-        //检查header中的authorization字段查找token
-        String authorization = request.getHeader("authorization");
+        //从header中得到token
+        String authorization = request.getHeader(Constants.AUTHORIZATION);
         //验证token
         TokenModel model = manager.getToken(authorization);
         if (manager.checkToken(model)) {

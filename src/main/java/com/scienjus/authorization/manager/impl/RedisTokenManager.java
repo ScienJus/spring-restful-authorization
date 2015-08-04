@@ -25,7 +25,7 @@ public class RedisTokenManager implements TokenManager {
     @Autowired
     public void setRedis(RedisTemplate redis) {
         this.redis = redis;
-        //泛型设置成Long了必须设置对应的序列化方案
+        //泛型设置成Long后必须更改对应的序列化方案
         redis.setKeySerializer(new JdkSerializationRedisSerializer());
     }
 

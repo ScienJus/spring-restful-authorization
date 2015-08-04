@@ -3,11 +3,14 @@ package com.scienjus.controller;
 import com.scienjus.authorization.annotation.Authorization;
 import com.scienjus.authorization.annotation.CurrentUser;
 import com.scienjus.authorization.manager.TokenManager;
+import com.scienjus.authorization.model.TokenModel;
 import com.scienjus.config.ResultStatus;
 import com.scienjus.domain.User;
 import com.scienjus.model.ResultModel;
-import com.scienjus.authorization.model.TokenModel;
 import com.scienjus.repository.UserRepository;
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 获取和删除token的请求地址，在Restful风格设计中其实就对应着登录和退出登录的资源映射
- * @author XieEnlong
+ * 获取和删除token的请求地址，在Restful设计中其实就对应着登录和退出登录的资源映射
+ * @author ScienJus
  * @date 2015/7/30.
  */
 @RestController
@@ -33,6 +36,7 @@ public class TokenController {
     private TokenManager tokenManager;
 
     @RequestMapping(method = RequestMethod.POST)
+    @ApiOperation(value = "登录")
     public ResponseEntity<ResultModel> login(@RequestParam String username, @RequestParam String password) {
         Assert.notNull(username, "username can not be empty");
         Assert.notNull(password, "password can not be empty");
@@ -50,6 +54,10 @@ public class TokenController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     @Authorization
+    @ApiOperation(value = "退出登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
     public ResponseEntity<ResultModel> logout(@CurrentUser User user) {
         tokenManager.deleteToken(user.getId());
         return new ResponseEntity<>(ResultModel.ok(), HttpStatus.OK);
